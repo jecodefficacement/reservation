@@ -12,14 +12,34 @@ import {
 //  GOOGLE SHEETS — API centrale
 // ─────────────────────────────────────────
 async function gsGet() {
-  try {
-    const res = await fetch(GOOGLE_SHEET_URL);
-    const data = await res.json();
-    return Array.isArray(data) ? data.reverse() : [];
-  } catch (e) {
-    console.error("Erreur lecture Google Sheets:", e);
-    return [];
-  }
+  return new Promise((resolve) => {
+    const cbName = "gsCallback_" + Date.now();
+    const script = document.createElement("script");
+
+    window[cbName] = (data) => {
+      delete window[cbName];
+      document.body.removeChild(script);
+      const arr = Array.isArray(data) ? data : [];
+      resolve(arr.reverse());
+    };
+
+    script.onerror = () => {
+      delete window[cbName];
+      document.body.removeChild(script);
+      resolve([]);
+    };
+
+    script.src = GOOGLE_SHEET_URL + "?callback=" + cbName;
+    document.body.appendChild(script);
+
+    setTimeout(() => {
+      if (window[cbName]) {
+        delete window[cbName];
+        try { document.body.removeChild(script); } catch {}
+        resolve([]);
+      }
+    }, 10000);
+  });
 }
 
 async function gsPost(payload) {
@@ -471,7 +491,7 @@ function AdminDashboard({ onLogout }) {
                   })}
                 </div>
               </div>
-              <a href={`https://wa.me/${selected.telephone.replace(/\D/g,"")}`} target="_blank" rel="noreferrer"
+              <a href={`https://wa.me/${String(selected.telephone).replace(/\D/g,"")}`} target="_blank" rel="noreferrer"
                 style={{ display:"block", textAlign:"center", background:C.green, color:C.white, borderRadius:10, padding:"0.7rem", fontSize:"0.88rem", fontWeight:700, textDecoration:"none", marginBottom:8 }}>
                 💬 Contacter sur WhatsApp
               </a>
