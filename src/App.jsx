@@ -421,7 +421,7 @@ function AdminDashboard({ onLogout }) {
             )}
             {filtered.map(r => {
               const sm = statusMeta[r.status] || statusMeta["En attente"];
-              const isSel = selected?.id === r.id;
+              const isSel = String(selected?.id) === String(r.id);
               return (
                 <div key={r.id} onClick={() => setSelected(isSel ? null : r)}
                   style={{ background:isSel?"#EDE9F7":C.white, border:`2px solid ${isSel?C.violet:"transparent"}`, borderRadius:14, padding:"0.9rem 1.1rem", cursor:"pointer", boxShadow:"0 2px 8px rgba(0,0,0,0.05)", display:"flex", alignItems:"center", justifyContent:"space-between", gap:12 }}>
