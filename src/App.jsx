@@ -491,10 +491,16 @@ function AdminDashboard({ onLogout }) {
 //  APP ROOT
 // ─────────────────────────────────────────
 export default function App() {
-  const [page, setPage] = useState("public");
+  const [page, setPage] = useState(() => {
+    return sessionStorage.getItem("jecode_admin") === "1" ? "admin" : "public";
+  });
+
+  const goAdmin = () => { sessionStorage.setItem("jecode_admin", "1"); setPage("admin"); };
+  const goOut   = () => { sessionStorage.removeItem("jecode_admin"); setPage("public"); };
+
   return (
     page === "public" ? <PublicPage onAdmin={() => setPage("login")} /> :
-    page === "login"  ? <AdminLogin onLogin={() => setPage("admin")} onBack={() => setPage("public")} /> :
-    page === "admin"  ? <AdminDashboard onLogout={() => setPage("public")} /> : null
+    page === "login"  ? <AdminLogin onLogin={goAdmin} onBack={() => setPage("public")} /> :
+    page === "admin"  ? <AdminDashboard onLogout={goOut} /> : null
   );
 }
