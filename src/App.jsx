@@ -157,7 +157,7 @@ function Logo() {
 // ─────────────────────────────────────────
 //  PAGE PUBLIQUE
 // ─────────────────────────────────────────
-function PublicPage({ onAdmin }) {
+function PublicPage({ onAdmin, showAdminBtn }) {
   const [form, setForm]     = useState({ nom: "", telephone: "", email: "", niveau: "", question: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -223,10 +223,12 @@ function PublicPage({ onAdmin }) {
     <div style={{ background: gradBg, minHeight: "100vh" }}>
       <div style={{ padding: "1.2rem 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Logo />
-        <button onClick={onAdmin}
-          style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: C.white, borderRadius: 20, padding: "0.4rem 1.1rem", cursor: "pointer", fontSize: "0.82rem", fontWeight: 600 }}>
-          Admin
-        </button>
+        {showAdminBtn && (
+          <button onClick={onAdmin}
+            style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: C.white, borderRadius: 20, padding: "0.4rem 1.1rem", cursor: "pointer", fontSize: "0.82rem", fontWeight: 600 }}>
+            Admin
+          </button>
+        )}
       </div>
       <div style={{ textAlign: "center", padding: "0.5rem 1.5rem 1.5rem" }}>
         <Badge style={{ marginBottom: 14, letterSpacing: 2, fontSize: "0.75rem", fontWeight: 700 }}>
@@ -511,6 +513,8 @@ function AdminDashboard({ onLogout }) {
 //  APP ROOT
 // ─────────────────────────────────────────
 export default function App() {
+  const showAdminBtn = new URLSearchParams(window.location.search).get("admin") === "1";
+
   const [page, setPage] = useState(() => {
     return sessionStorage.getItem("jecode_admin") === "1" ? "admin" : "public";
   });
@@ -519,7 +523,7 @@ export default function App() {
   const goOut   = () => { sessionStorage.removeItem("jecode_admin"); setPage("public"); };
 
   return (
-    page === "public" ? <PublicPage onAdmin={() => setPage("login")} /> :
+    page === "public" ? <PublicPage onAdmin={() => setPage("login")} showAdminBtn={showAdminBtn} /> :
     page === "login"  ? <AdminLogin onLogin={goAdmin} onBack={() => setPage("public")} /> :
     page === "admin"  ? <AdminDashboard onLogout={goOut} /> : null
   );
