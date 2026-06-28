@@ -143,3 +143,12 @@ Puis `git push`.
 ## ❓ En cas de problème
 
 Contacte sur WhatsApp : +224 624 144 006
+
+
+ID de déploiement Google sheets
+
+AKfycbyG70ys8uRKW0JzUOTzcMFtdETdZ-YTYVf0nc9bMFC9_7pwQBaB6IeqS7FI3ML1Ghn_-A
+
+Application Web
+
+https://script.google.com/macros/s/AKfycbyG70ys8uRKW0JzUOTzcMFtdETdZ-YTYVf0nc9bMFC9_7pwQBaB6IeqS7FI3ML1Ghn_-A/exec
